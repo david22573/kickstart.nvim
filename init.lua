@@ -744,7 +744,7 @@ require('lazy').setup({
           return nil
         else
           return {
-            timeout_ms = 500,
+            timeout_ms = 3000,
             lsp_format = 'fallback',
           }
         end
@@ -752,7 +752,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = {},
         -- Conform can also run multiple formatters sequentially
-        python = { 'isort', 'black' },
+        python = { 'isort', 'black', 'flake8' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
@@ -968,7 +968,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
