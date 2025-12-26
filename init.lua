@@ -684,21 +684,6 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         ts_ls = {},
         --
-
-        lua_ls = {
-          -- cmd = {},
-          -- filetypes = { ... },
-          -- capabilities = {},
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = 'Replace',
-              },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
-            },
-          },
-        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -735,30 +720,40 @@ require('lazy').setup({
         },
       }
 
-      -- [[ Manual LSP Setup for System Binaries ]]
-      -- This setup bypasses Mason for specific servers that are installed locally (e.g., via Termux pkg)
-      local lspconfig = require 'lspconfig'
+-- [[ Manual LSP Setup for System Binaries ]]
+      -- We use vim.lsp.start() directly to avoid the "lspconfig deprecated" warning on Neovim 0.11+
 
-      -- Configure Lua Language Server (System Version)
-      lspconfig.lua_ls.setup {
-        -- Use the specific path found in your original config (Termux path)
-        cmd = { '/data/data/com.termux/files/usr/bin/lua-language-server' },
-        capabilities = capabilities,
-        settings = {
-          Lua = {
-            completion = {
-              callSnippet = 'Replace',
+      -- 1. Configure Lua (System Version)
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'lua',
+        callback = function(args)
+          vim.lsp.start({
+            name = 'lua_ls',
+            cmd = { '/data/data/com.termux/files/usr/bin/lua-language-server' },
+            -- Automatically find the project root (where .git or init.lua is)
+            root_dir = vim.fs.root(args.buf, {'.git', '.luarc.json', 'init.lua'}),
+            capabilities = capabilities,
+            settings = {
+              Lua = {
+                completion = { callSnippet = 'Replace' },
+              },
             },
-          },
-        },
-      }
+          })
+        end,
+      })
 
-      -- Configure Clangd (System Version)
-      lspconfig.clangd.setup {
-        -- Assuming clangd is in your PATH. If not, replace 'clangd' with the full path.
-        cmd = { 'clangd' },
-        capabilities = capabilities,
-      }
+      -- 2. Configure Clangd (System Version)
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'c', 'cpp', 'objc', 'objcpp' },
+        callback = function(args)
+          vim.lsp.start({
+            name = 'clangd',
+            cmd = { 'clangd' }, -- Assumes clangd is in your PATH
+            root_dir = vim.fs.root(args.buf, {'.git', 'compile_commands.json', 'Makefile'}),
+            capabilities = capabilities,
+          })
+        end,
+      })
     end,
   },
 
