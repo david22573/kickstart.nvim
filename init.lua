@@ -169,6 +169,8 @@ vim.o.confirm = true
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+vim.keymap.set({ 'n', 'i', 'v' }, '<C-s>', '<cmd>w<CR>', { desc = 'Save file' })
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -684,7 +686,7 @@ require('lazy').setup({
         --
 
         lua_ls = {
-          cmd = { '/data/data/com.termux/files/usr/bin/lua-language-server' },
+          -- cmd = {},
           -- filetypes = { ... },
           -- capabilities = {},
           settings = {
@@ -731,6 +733,31 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
+      }
+
+      -- [[ Manual LSP Setup for System Binaries ]]
+      -- This setup bypasses Mason for specific servers that are installed locally (e.g., via Termux pkg)
+      local lspconfig = require 'lspconfig'
+
+      -- Configure Lua Language Server (System Version)
+      lspconfig.lua_ls.setup {
+        -- Use the specific path found in your original config (Termux path)
+        cmd = { '/data/data/com.termux/files/usr/bin/lua-language-server' },
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            completion = {
+              callSnippet = 'Replace',
+            },
+          },
+        },
+      }
+
+      -- Configure Clangd (System Version)
+      lspconfig.clangd.setup {
+        -- Assuming clangd is in your PATH. If not, replace 'clangd' with the full path.
+        cmd = { 'clangd' },
+        capabilities = capabilities,
       }
     end,
   },
