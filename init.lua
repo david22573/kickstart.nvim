@@ -675,7 +675,6 @@ require('lazy').setup({
       local servers = {
         gopls = {},
         pyright = {},
-        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -700,9 +699,7 @@ require('lazy').setup({
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-      })
+      vim.list_extend(ensure_installed, {})
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
@@ -720,25 +717,25 @@ require('lazy').setup({
         },
       }
 
--- [[ Manual LSP Setup for System Binaries ]]
+      -- [[ Manual LSP Setup for System Binaries ]]
       -- We use vim.lsp.start() directly to avoid the "lspconfig deprecated" warning on Neovim 0.11+
 
       -- 1. Configure Lua (System Version)
       vim.api.nvim_create_autocmd('FileType', {
         pattern = 'lua',
         callback = function(args)
-          vim.lsp.start({
+          vim.lsp.start {
             name = 'lua_ls',
             cmd = { '/data/data/com.termux/files/usr/bin/lua-language-server' },
             -- Automatically find the project root (where .git or init.lua is)
-            root_dir = vim.fs.root(args.buf, {'.git', '.luarc.json', 'init.lua'}),
+            root_dir = vim.fs.root(args.buf, { '.git', '.luarc.json', 'init.lua' }),
             capabilities = capabilities,
             settings = {
               Lua = {
                 completion = { callSnippet = 'Replace' },
               },
             },
-          })
+          }
         end,
       })
 
@@ -746,12 +743,12 @@ require('lazy').setup({
       vim.api.nvim_create_autocmd('FileType', {
         pattern = { 'c', 'cpp', 'objc', 'objcpp' },
         callback = function(args)
-          vim.lsp.start({
+          vim.lsp.start {
             name = 'clangd',
             cmd = { 'clangd' }, -- Assumes clangd is in your PATH
-            root_dir = vim.fs.root(args.buf, {'.git', 'compile_commands.json', 'Makefile'}),
+            root_dir = vim.fs.root(args.buf, { '.git', 'compile_commands.json', 'Makefile' }),
             capabilities = capabilities,
-          })
+          }
         end,
       })
     end,
@@ -790,10 +787,10 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'black' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -961,6 +958,7 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'master',
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
@@ -997,15 +995,15 @@ require('lazy').setup({
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
-	require 'kickstart.plugins.autopairs',
-	require 'kickstart.plugins.neo-tree',
-	require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  	{ import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
