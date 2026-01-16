@@ -791,6 +791,7 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        go = { 'gofmt', 'goimports', 'gofumt' },
       },
     },
   },
@@ -963,7 +964,23 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'svelte' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+        'svelte',
+        'python',
+        'go',
+        'svelte',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -1033,3 +1050,19 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- Force Neovim to use OSC 52 for the clipboard
+vim.g.clipboard = {
+  name = 'OSC 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy '+',
+    ['*'] = require('vim.ui.clipboard.osc52').copy '*',
+  },
+  paste = {
+    ['+'] = require('vim.ui.clipboard.osc52').paste '+',
+    ['*'] = require('vim.ui.clipboard.osc52').paste '*',
+  },
+}
+
+-- Sync the internal registers to the system clipboard
+vim.opt.clipboard = 'unnamedplus'
