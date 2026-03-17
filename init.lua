@@ -1019,6 +1019,28 @@ require('lazy').setup({
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
+
+  {
+    'david22573/codepicker',
+    opts = {},
+    cmd = {
+      'CodePickerAsk',
+      'CodePickerEdit',
+      'CodePickerGhost',
+      'CodePickerContext',
+      'CodePickerAdd',
+      'CodePickerDrop',
+      'CodePickerTask',
+    },
+    keys = {
+      { '<leader>ca', ':CodePickerAsk ', desc = 'CodePicker [A]sk' },
+      { '<leader>ce', ":'<,'>CodePickerEdit ", mode = 'v', desc = 'CodePicker [E]dit (Visual)' },
+      { '<leader>cg', ':CodePickerGhost ', desc = 'CodePicker [G]host' },
+      { '<leader>ct', ':CodePickerTask ', desc = 'CodePicker [T]ask' },
+      { '<leader>cc', '<cmd>CodePickerContext<CR>', desc = 'CodePicker [C]ontext Dump' },
+    },
+  },
+
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   { import = 'custom.plugins' },
   --
