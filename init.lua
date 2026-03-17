@@ -1021,7 +1021,7 @@ require('lazy').setup({
   --
 
   {
-    'david22573/codepicker',
+    'david22573/codepicker-lua',
     opts = {},
     cmd = {
       'CodePickerAsk',
@@ -1035,9 +1035,11 @@ require('lazy').setup({
     keys = {
       { '<leader>ca', ':CodePickerAsk ', desc = 'CodePicker [A]sk' },
       { '<leader>ce', ":'<,'>CodePickerEdit ", mode = 'v', desc = 'CodePicker [E]dit (Visual)' },
-      { '<leader>cg', ':CodePickerGhost ', desc = 'CodePicker [G]host' },
+      { '<leader>cg', ":'<,'>CodePickerGhost ", mode = { 'n', 'v' }, desc = 'CodePicker [G]host' },
       { '<leader>ct', ':CodePickerTask ', desc = 'CodePicker [T]ask' },
       { '<leader>cc', '<cmd>CodePickerContext<CR>', desc = 'CodePicker [C]ontext Dump' },
+      { '<leader>cy', '<cmd>CodePickerApprove<CR>', desc = 'CodePicker [Y]es (Approve Sentinel)' },
+      { '<leader>cn', '<cmd>CodePickerDeny<CR>', desc = 'CodePicker [N]o (Deny Sentinel)' },
     },
   },
 
